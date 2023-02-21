@@ -21,56 +21,48 @@
 #include "file.h"
 #include "smprintf.h"
 
-int battery_present(void)
-{
-	char *path = "/sys/class/power_supply/BAT0";
-	char *co;
-
-	co = readfile(path, "present");
-	if (co == NULL) {
-		free(co);
-		return 1;
-	} else if (co[0] != '1') {
-		free(co);
-		return 1;
-	}
-
-	free(co);
-	return 0;
+int battery_present(char *base) {
+	if (readfile(base, "present") == NULL)
+		return 0;
+	return 1;
 }
 
-char *get_battery(void)
-{
-	char *path = "/sys/class/power_supply/BAT0";
-	char *co, status;
+int read_level(char *base) {
 	int level;
-
-	level = -1;
-
-	co = readfile(path, "capacity");
-	if (co == NULL)
-		return smprintf("");
+	char *co = readfile(base, "capacity");
 
 	sscanf(co, "%d", &level);
-	free(co);
+	return level;
+}
 
-	co = readfile(path, "status");
+char read_status(char *base) {
+	char status;
+	char *co = readfile(base, "status");
+
 	if (!strncmp(co, "Discharging", 11)) {
 		status = 'v';
+	} else if(!strncmp(co, "Not charging", 12)) {
+		status = ' ';
 	} else if(!strncmp(co, "Full", 4)) {
-		status = '\0';
+		status = ' ';
 	} else if(!strncmp(co, "Charging", 8)) {
 		status = '^';
 	} else {
 		status = '?';
 	}
-	free(co);
-
-	if (level < 0)
-		return smprintf("invalid");
-
-	if (status == '\0')
-		return smprintf("%d%%", level);
-
-	return smprintf("%c%d%%", status, level);
+	return status;
 }
+
+char *get_battery(int n) {
+	char path[29];
+	snprintf(path, 29, "/sys/class/power_supply/BAT%d", n);
+
+	if (!battery_present(path))
+		return "\0";
+
+	int level = read_level(path);
+	char status = read_status(path);
+
+	return smprintf("| %d%%%c", level, status);
+}
+

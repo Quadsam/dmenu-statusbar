@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <X11/Xlib.h>
 #include "battery.h"
@@ -27,8 +28,8 @@
 
 char *time_fmt = "%I:%M:%S %p";
 char *date_fmt = "%m/%d/%Y";
-char *battery_path = "/sys/class/power_supply/BAT0";
 char *cpu_temp_path = "/sys/devices/virtual/thermal/thermal_zone9";
+int running = 1;
 
 static Display *display;
 
@@ -40,37 +41,37 @@ void setstatus(char *str)
 
 int main(void)
 {
-	char *status;
+	char *status = malloc(128);
 	char *ctime;
 	char *cdate;
-	char *temp;
-	int battery;
+	char *temp = malloc(8);
+	char *batt;
 
 	if (!(display = XOpenDisplay(NULL))) {
 		fprintf(stderr, "dwmstatus: cannot open display.\n");
 		return 1;
 	}
 
-	battery = battery_present();
-
-	for (;;sleep(1)) {
+	while(running) {
 		ctime = get_time(time_fmt);
 		cdate = get_time(date_fmt);
 		temp = get_temp(cpu_temp_path);
+		batt = get_battery(0);
 
-		if (battery == 0)
-			status = smprintf(" %s | %s | %s | %s ", ctime, cdate, temp, get_battery());
-		else
-			status = smprintf(" %s | %s | %s ", ctime, cdate);
+		status = smprintf(" %s | %s | %s ", ctime, cdate, temp);
+//		strcpy(status, ctime);
+//		strcat(status, cdate);
+//		strcat(status, temp);
+		strcat(status, batt);
 
 		setstatus(status);
-		free(ctime);
-		free(cdate);
-		free(temp);
-		free(status);
+		sleep(1);
 	}
 
+	free(ctime);
+	free(cdate);
+	free(temp);
+	free(status);
 	XCloseDisplay(display);
 	return 0;
 }
-
