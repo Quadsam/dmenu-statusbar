@@ -17,14 +17,14 @@
 include config.mk
 
 SRC	:= $(wildcard src/*.c)
-OBJ	:= ${SRC:%.c=%.o}
+OBJ	:= ${SRC:%.c=build/%.o}
 
 .PHONY: all clean dist info install uninstall
 
 all .DEFAULT: info ${NAME}
 
 clean:
-	$(RM) -f ${NAME} ${OBJ} ${NAME}-${VERSION}.src.tar.zst
+	$(RM) -r ${NAME} build ${NAME}-${VERSION}.src.tar.zst
 
 dist: info LICENSE
 	mkdir -p ${NAME}-${VERSION}
@@ -44,12 +44,11 @@ install: all LICENSE
 	install -Dm644 LICENSE ${DESTDIR}${PREFIX}/share/licenses/${NAME}/LICENSE
 
 uninstall:
-	rm -f ${DESTDIR}/${PREFIX}/bin/${NAME}
+	rm ${DESTDIR}/${PREFIX}/bin/${NAME}
 
 ${NAME}: ${OBJ}
 	${CC} ${LDFLAGS} -o $@ $^
 
-.c.o:
+build/%.o: %.c
+	@mkdir -p $(shell dirname $@)
 	${CC} ${CFLAGS} -c -o $@ $<
-
-$(OBJ): config.mk
