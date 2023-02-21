@@ -17,7 +17,7 @@
 #ifndef BATTERY_H_
 #define BATTERY_H_
 
-int test_battery(void);
+int battery_present(void);
 
 char *get_battery(void);
 

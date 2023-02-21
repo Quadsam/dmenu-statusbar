@@ -21,7 +21,7 @@
 #include "file.h"
 #include "smprintf.h"
 
-int test_battery(void)
+int battery_present(void)
 {
 	char *path = "/sys/class/power_supply/BAT0";
 	char *co;

@@ -51,7 +51,7 @@ int main(void)
 		return 1;
 	}
 
-	battery = test_battery();
+	battery = battery_present();
 
 	for (;;sleep(1)) {
 		ctime = get_time(time_fmt);
