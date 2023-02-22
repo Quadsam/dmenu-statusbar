@@ -14,28 +14,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include <time.h>
-#include <stddef.h>
-#include <stdio.h>
-#include "date.h"
-#include "smprintf.h"
+#ifndef UTILS_H_
+#define UTILS_H_
 
-char *get_time(char *format)
-{
-	char buf[129];
-	time_t timep;
-	struct tm *tm;
+char *datetime(void);
+char *cputemp(int n);
 
-	timep = time(NULL);
-	tm = localtime(&timep);
-	if (tm == NULL)
-		return smprintf("");
-
-	if (!strftime(buf, sizeof(buf)-1, format, tm)) {
-		fprintf(stderr, "strftime == 0\n");
-		return smprintf("");
-	}
-
-	return smprintf("%s", buf);
-}
+#endif
 

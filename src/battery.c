@@ -14,55 +14,94 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "battery.h"
-#include "file.h"
-#include "smprintf.h"
+#include "inout.h"
 
-int battery_present(char *base) {
-	if (readfile(base, "present") == NULL)
-		return 0;
-	return 1;
-}
-
-int read_level(char *base) {
+/* Function for getting the current charge level (returns -1 on error). */
+int battery_level(char *path) {
+	char *capacity = readfile(path, "capacity");
 	int level;
-	char *co = readfile(base, "capacity");
 
-	sscanf(co, "%d", &level);
+	// Stop if nothing is read
+	if (capacity == NULL) {
+		writelog(1, "Failed to read battery level");
+		free(capacity);
+		return -1;
+	}
+
+	// Convert the char array to an int
+	sscanf(capacity, "%d", &level);
+	free(capacity);
+	writelog(3, "Battery level: '%d'", level);
 	return level;
 }
 
-char read_status(char *base) {
+/* Find the current status of the battery (returns 'E' on error). */
+char battery_status(char *base) {
 	char status;
-	char *co = readfile(base, "status");
+	char *buff = readfile(base, "status");
 
-	if (!strncmp(co, "Discharging", 11)) {
+	if (buff == NULL) {
+		writelog(1, "Failed to read battery status");
+		return 'E';
+	}
+
+	if (!strncmp(buff, "Discharging", 11)) {
+		writelog(3, "Battery status: 'Discharging'");
 		status = 'v';
-	} else if(!strncmp(co, "Not charging", 12)) {
+	} else if(!strncmp(buff, "Not charging", 12)) {
+		writelog(3, "Battery status: 'Not charging'");
 		status = ' ';
-	} else if(!strncmp(co, "Full", 4)) {
+	} else if(!strncmp(buff, "Full", 4)) {
+		writelog(3, "Battery status: 'Full'");
 		status = ' ';
-	} else if(!strncmp(co, "Charging", 8)) {
+	} else if(!strncmp(buff, "Charging", 8)) {
+		writelog(3, "Battery status: 'Charging'");
 		status = '^';
 	} else {
+		buff[strlen(buff) - 1] = '\0';
+		writelog(2, "Read an unknown status '%s'", buff);
 		status = '?';
 	}
+
+	free(buff);
 	return status;
 }
 
-char *get_battery(int n) {
+/* Retrive battery information if avaliable. */
+char *battery(int n) {
+	char *buff = malloc(8);
 	char path[29];
 	snprintf(path, 29, "/sys/class/power_supply/BAT%d", n);
 
-	if (!battery_present(path))
-		return "\0";
+	// Test if the battery is present
+	char *present = readfile(path, "present");
+	if (present == NULL) {
+		// A battery is only present if a '1' was read.
+		writelog(3, "No battery present");
+		free(present);
+		strcpy(buff, "");
+		return buff;
+	}
+	free(present);
 
-	int level = read_level(path);
-	char status = read_status(path);
+	// If any of the following fail this is what they return.
+	strcpy(buff, "| ERROR");
 
-	return smprintf("| %d%%%c", level, status);
+	// Get the current battery level
+	int level = battery_level(path);
+	if (level == -1)
+		return buff;
+
+	// Get the battery status
+	char status = battery_status(path);
+	if (status == 'E')
+		return buff;
+
+	// Format and return the final string.
+	snprintf(buff, 8, "| %d%%%c", level, status);
+	return buff;
 }
-

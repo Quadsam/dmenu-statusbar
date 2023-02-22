@@ -1,3 +1,4 @@
 dmenustatus
 *.o
 *.tar.zst
+runvalgrind.sh

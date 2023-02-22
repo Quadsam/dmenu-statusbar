@@ -20,16 +20,22 @@ DEBUG		:= true
 
 INCS		:= -Iinclude
 LIBS		:= -lX11
-FLAGS		:=  -Wall -pedantic
-CFLAGS		:= $(FLAGS) ${INCS}
-LDFLAGS		:= $(FLAGS) ${LIBS}
+FLAGS		:=  -Wall -Werror -pedantic
+CFLAGS		:= ${FLAGS} ${INCS}
+LDFLAGS		:= ${FLAGS} ${LIBS}
 
 PREFIX		:= /usr/local
 MANPREFIX	:= ${PREFIX}/share/man
 
-ifeq "$(DEBUG)" "true"
+ifeq "${PROFILE}" "true"
+CFLAGS		+= -pg
+LDFLAGS		+= -pg
+endif
+
+ifeq "${DEBUG}" "true"
 CFLAGS		+= -g
 BUILD		+= debug
 else
 BUILD		+= release
 endif
+

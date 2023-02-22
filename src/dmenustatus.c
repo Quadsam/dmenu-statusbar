@@ -17,60 +17,45 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <X11/Xlib.h>
 #include "battery.h"
-#include "date.h"
-#include "file.h"
-#include "smprintf.h"
-#include "temp.h"
-
-
-char *time_fmt = "%I:%M:%S %p";
-char *date_fmt = "%m/%d/%Y";
-char *cpu_temp_path = "/sys/devices/virtual/thermal/thermal_zone9";
-int running = 1;
+#include "inout.h"
+#include "utils.h"
 
 static Display *display;
+int running = 1;
 
-void setstatus(char *str)
-{
+void setstatus(char *str) {
 	XStoreName(display, DefaultRootWindow(display), str);
 	XSync(display, False);
 }
 
-int main(void)
-{
-	char *status = malloc(128);
-	char *ctime;
-	char *cdate;
-	char *temp = malloc(8);
-	char *batt;
+int main(void) {
+	char *status = malloc(64);
+	char *datetime_buff;
+	char *cputemp_buff;
+	char *battery_buff;
 
 	if (!(display = XOpenDisplay(NULL))) {
-		fprintf(stderr, "dwmstatus: cannot open display.\n");
+		fprintf(stderr, "Cannot open display");
 		return 1;
 	}
 
 	while(running) {
-		ctime = get_time(time_fmt);
-		cdate = get_time(date_fmt);
-		temp = get_temp(cpu_temp_path);
-		batt = get_battery(0);
-
-		status = smprintf(" %s | %s | %s ", ctime, cdate, temp);
-//		strcpy(status, ctime);
-//		strcat(status, cdate);
-//		strcat(status, temp);
-		strcat(status, batt);
-
+		datetime_buff = datetime();
+		cputemp_buff = cputemp(9);
+		battery_buff = battery(0);
+		strcpy(status, datetime_buff);
+		strcat(status, cputemp_buff);
+		strcat(status, battery_buff);
+		writelog(4, "Setting status: '%s'", status);
 		setstatus(status);
-		sleep(1);
+//		sleep(1);
+		running = 0;
 	}
-
-	free(ctime);
-	free(cdate);
-	free(temp);
+	free(datetime_buff);
+	free(cputemp_buff);
+	free(battery_buff);
 	free(status);
 	XCloseDisplay(display);
 	return 0;

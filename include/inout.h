@@ -14,31 +14,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include "smprintf.h"
+#ifndef INOUT_H_
+#define INOUT_H_
 
-char *smprintf(char *fmt, ...)
-{
-	va_list fmtargs;
-	char *ret;
-	int len;
+int writelog(int v, char *fmt, ...);
+char *readfile(char *base, char *file);
 
-	va_start(fmtargs, fmt);
-	len = vsnprintf(NULL, 0, fmt, fmtargs);
-	va_end(fmtargs);
+#endif
 
-	ret = malloc(++len);
-	if (ret == NULL) {
-		perror("malloc");
-		exit(1);
-	}
-
-	va_start(fmtargs, fmt);
-	vsnprintf(ret, len, fmt, fmtargs);
-	va_end(fmtargs);
-
-	return ret;
-}
