@@ -28,7 +28,7 @@ clean:
 
 dist: info LICENSE
 	mkdir -p ${NAME}-${VERSION}
-	cp -r config.mk Makefile src LICENSE ${NAME}-${VERSION}
+	cp -r config.mk Makefile src include LICENSE ${NAME}-${VERSION}
 	tar cO ${NAME}-${VERSION} | zstd -c19 >${NAME}-${VERSION}.src.tar.zst
 	rm -rf ${NAME}-${VERSION}
 
