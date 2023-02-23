@@ -28,20 +28,22 @@ Display *display;
 int running = 1;
 
 int main(void) {
+	display = XOpenDisplay(NULL);
+	if (display == NULL) {
+		writelog(0, "Cannot open display");
+		return 1;
+	}
+
 	char *status = malloc(42);
 	char *datetime_buff;
 	char *cputemp_buff;
 	char *battery_buff;
 
-	if (!(display = XOpenDisplay(NULL))) {
-		fprintf(stderr, "Cannot open display");
-		return 1;
-	}
-
 	signal(SIGHUP, handle_signal);
 	signal(SIGINT, handle_signal);
 	signal(SIGQUIT, handle_signal);
 	signal(SIGTERM, handle_signal);
+	writelog(3, "PID: %d", getpid());
 	while(running) {
 		memset(status, 0, 42);
 		datetime_buff = datetime();
