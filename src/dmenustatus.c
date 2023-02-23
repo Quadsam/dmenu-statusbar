@@ -14,24 +14,21 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <X11/Xlib.h>
 #include "battery.h"
 #include "inout.h"
 #include "utils.h"
 
-static Display *display;
+Display *display;
 int running = 1;
 
-void setstatus(char *str) {
-	XStoreName(display, DefaultRootWindow(display), str);
-	XSync(display, False);
-}
-
 int main(void) {
-	char *status = malloc(64);
+	char *status = malloc(42);
 	char *datetime_buff;
 	char *cputemp_buff;
 	char *battery_buff;
@@ -41,7 +38,12 @@ int main(void) {
 		return 1;
 	}
 
+	signal(SIGHUP, handle_signal);
+	signal(SIGINT, handle_signal);
+	signal(SIGQUIT, handle_signal);
+	signal(SIGTERM, handle_signal);
 	while(running) {
+		memset(status, 0, 42);
 		datetime_buff = datetime();
 		cputemp_buff = cputemp(9);
 		battery_buff = battery(0);
@@ -50,13 +52,17 @@ int main(void) {
 		strcat(status, battery_buff);
 		writelog(4, "Setting status: '%s'", status);
 		setstatus(status);
-//		sleep(1);
-		running = 0;
+		sleep(1);
+//		running = 0;
 	}
+	writelog(3, "Cleaning up...");
+	writelog(4, "Freeing buffers");
 	free(datetime_buff);
 	free(cputemp_buff);
 	free(battery_buff);
 	free(status);
+	writelog(4, "Closing display");
 	XCloseDisplay(display);
+	writelog(2, "Quitting");
 	return 0;
 }

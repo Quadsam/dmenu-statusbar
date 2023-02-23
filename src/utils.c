@@ -18,7 +18,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <X11/Xlib.h>
+#include "dmenustatus.h"
 #include "inout.h"
+
+void handle_signal(int sig) {
+	writelog(2, "Caught signal %d", sig);
+	running = 0;
+}
+
+void setstatus(char *str) {
+    XStoreName(display, DefaultRootWindow(display), str);
+    XSync(display, False);
+}
 
 char *datetime(void) {
 	char *buff = malloc(64);

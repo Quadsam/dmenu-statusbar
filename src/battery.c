@@ -76,6 +76,7 @@ char *battery(int n) {
 	char *buff = malloc(8);
 	char path[29];
 	snprintf(path, 29, "/sys/class/power_supply/BAT%d", n);
+	memset(buff, 0, 8);
 
 	// Test if the battery is present
 	char *present = readfile(path, "present");

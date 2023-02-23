@@ -53,12 +53,6 @@ build/%.o: %.c
 	@mkdir -p $(shell dirname $@)
 	${CC} ${CFLAGS} -c -o $@ $<
 
-ifeq "${DEBUG}" "true"
-valgrind: clean ${NAME}
-	DEBUGINFOD_URLS="$(shell cat /etc/debuginfod/archlinux.urls)" valgrind --leak-check=full --show-leak-kinds=all -s "./${NAME}" 2>&1
-endif
-
-
 ifeq "${PROFILE}" "true"
 profile: clean all
 	"./${NAME}"

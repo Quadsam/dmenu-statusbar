@@ -14,13 +14,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef UTILS_H_
-#define UTILS_H_
+#ifndef DMENU_STATUS_H_
+#define DMENU_STATUS_H_
 
-void handle_signal(int sig);
-void setstatus(char *str);
-char *datetime(void);
-char *cputemp(int n);
+extern int running;
+extern Display *display;
 
 #endif
 
