@@ -18,11 +18,11 @@ NAME		:= dmenustatus
 VERSION		:= 0.5.2
 DEBUG		:= true
 
-INCS		:= -Iinclude
-LIBS		:= -lX11
+INCS		:= -I/usr/include/X11 -Iinclude
+LIBS		:= -L/usr/lib/X11 -lX11
 FLAGS		:=  -Wall -Werror -pedantic
-CFLAGS		:= ${FLAGS} ${INCS}
-LDFLAGS		:= ${FLAGS} ${LIBS}
+CFLAGS		+= ${FLAGS} ${INCS}
+LDFLAGS		+= ${FLAGS} ${LIBS}
 
 PREFIX		:= /usr/local
 MANPREFIX	:= ${PREFIX}/share/man
@@ -38,4 +38,3 @@ BUILD		+= debug
 else
 BUILD		+= release
 endif
-
