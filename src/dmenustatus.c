@@ -35,9 +35,9 @@ int main(void) {
 	}
 
 	char *status = malloc(42);
-	char *datetime_buff;
-	char *cputemp_buff;
-	char *battery_buff;
+	char *datetime_buff = NULL;
+	char *cputemp_buff = NULL;
+	char *battery_buff = NULL;
 
 	signal(SIGHUP, handle_signal);
 	signal(SIGINT, handle_signal);
