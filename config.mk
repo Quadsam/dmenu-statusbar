@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 NAME		:= dmenustatus
-VERSION		:= 0.5.1
+VERSION		:= 0.5.2
 DEBUG		:= true
 
 INCS		:= -Iinclude
