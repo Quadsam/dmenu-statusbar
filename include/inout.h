@@ -17,7 +17,9 @@
 #ifndef INOUT_H_
 #define INOUT_H_
 
+void parse_args(int argc, char **argv);
 int writelog(int v, char *fmt, ...);
+void handle_signal(int sig);
 char *readfile(char *base, char *file);
 
 #endif

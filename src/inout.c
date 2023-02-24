@@ -18,14 +18,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <unistd.h>
+#include <X11/Xlib.h>
+#include "dmenustatus.h"
+#include "utils.h"
 
-const int verbose = 2;
+void parse_args(int argc, char **argv) {
+    int c;
+    while ((c = getopt(argc, argv, "vt")) != -1) {
+        switch (c) {
+            case 'v':
+                verbose++;
+                break;
+            case 't':
+                testing = 1;
+                break;
+        }
+    }
+    return;
+}
 
 int writelog(int v, char *fmt, ...) {
 	int n = 0;
 	size_t size = 0;
 	char *p = NULL;
 	char *prefix = NULL;
+    char log_time[23];
+    time_t timep;
+    struct tm *tm;
 	va_list ap;
 
 	if (v > verbose)
@@ -63,9 +84,17 @@ int writelog(int v, char *fmt, ...) {
 	else if (v == 4)
 		prefix = "DEBUG";
 
-	fprintf(stderr, "[%s]\t %s\n", prefix, p);
+	timep = time(NULL);
+    tm = localtime(&timep);
+    strftime(log_time, sizeof(log_time)-1, "%x %X", tm);
+	fprintf(stderr, "[%s]\t %s:\t %s\n", log_time, prefix, p);
 	free(p);
 	return 1;
+}
+
+void handle_signal(int sig) {
+    writelog(2, "Caught signal %d", sig);
+    running = 0;
 }
 
 char *readfile(char *base, char *file) {

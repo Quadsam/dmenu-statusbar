@@ -17,7 +17,9 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
-void handle_signal(int sig);
+extern Display *display;
+
+int open_display(void);
 void setstatus(char *str);
 char *datetime(void);
 char *cputemp(int n);

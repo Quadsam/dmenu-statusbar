@@ -18,7 +18,8 @@
 #define DMENU_STATUS_H_
 
 extern int running;
-extern Display *display;
+extern int verbose;
+extern int testing;
 
 #endif
 
