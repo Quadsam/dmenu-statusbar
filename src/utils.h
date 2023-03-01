@@ -14,11 +14,15 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef INOUT_H_
-#define INOUT_H_
+#ifndef UTILS_H_
+#define UTILS_H_
 
-int writelog(int v, char *fmt, ...);
-char *readfile(char *base, char *file);
+extern Display *display;
+
+int open_display(void);
+void setstatus(char *str);
+char *datetime(void);
+char *cputemp(int n);
 
 #endif
 

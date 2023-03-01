@@ -18,13 +18,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <X11/Xlib.h>
 #include "dmenustatus.h"
 #include "inout.h"
 
-void handle_signal(int sig) {
-	writelog(2, "Caught signal %d", sig);
-	running = 0;
+Display *display;
+
+int open_display(void) {
+	if (!(display = XOpenDisplay(NULL))) {
+		writelog(0, "Cannot open display");
+		return 0;
+	}
+	return 1;
 }
 
 void setstatus(char *str) {
@@ -51,15 +57,12 @@ char *datetime(void) {
 		strcpy(buff, " ERROR ");
 		return buff;
 	}
-	writelog(3, "Found time: '%s'", ctime);
 
 	if (!strftime(cdate, sizeof(cdate)-1, "%m/%d/%Y", tm)) {
 		writelog(1, "strftime returned an error when retriving date");
 		strcpy(buff, " ERROR ");
 		return buff;
 	}
-	writelog(3, "Found date: '%s'", cdate);
-
 	snprintf(buff, 64, " %s | %s ", ctime, cdate);
 	return buff;
 }

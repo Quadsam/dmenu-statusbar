@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef UTILS_H_
-#define UTILS_H_
+#ifndef INOUT_H_
+#define INOUT_H_
 
+void parse_args(int argc, char **argv);
+int writelog(int v, char *fmt, ...);
 void handle_signal(int sig);
-void setstatus(char *str);
-char *datetime(void);
-char *cputemp(int n);
+char *readfile(char *base, char *file);
 
 #endif
 

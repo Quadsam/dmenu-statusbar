@@ -24,25 +24,25 @@
 #include "inout.h"
 #include "utils.h"
 
-Display *display;
+int verbose = 2;
 int running = 1;
+int testing = 0;
 
-int main(void) {
-	display = XOpenDisplay(NULL);
-	if (display == NULL) {
-		writelog(0, "Cannot open display");
+int main(int argc, char **argv) {
+	parse_args(argc, argv);
+	if (!open_display())
 		return 1;
-	}
 
 	char *status = malloc(42);
-	char *datetime_buff;
-	char *cputemp_buff;
-	char *battery_buff;
+	char *datetime_buff = NULL;
+	char *cputemp_buff = NULL;
+	char *battery_buff = NULL;
 
 	signal(SIGHUP, handle_signal);
 	signal(SIGINT, handle_signal);
 	signal(SIGQUIT, handle_signal);
 	signal(SIGTERM, handle_signal);
+
 	writelog(3, "PID: %d", getpid());
 	while(running) {
 		memset(status, 0, 42);
@@ -54,10 +54,12 @@ int main(void) {
 		strcat(status, battery_buff);
 		writelog(4, "Setting status: '%s'", status);
 		setstatus(status);
-		sleep(1);
-//		running = 0;
+		if (testing)
+			running = 0;
+		else
+			sleep(1);
 	}
-	writelog(3, "Cleaning up...");
+	writelog(4, "Cleaning up...");
 	writelog(4, "Freeing buffers");
 	free(datetime_buff);
 	free(cputemp_buff);
@@ -65,6 +67,6 @@ int main(void) {
 	free(status);
 	writelog(4, "Closing display");
 	XCloseDisplay(display);
-	writelog(2, "Quitting");
+	writelog(3, "Quitting");
 	return 0;
 }
