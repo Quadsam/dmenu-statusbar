@@ -1,6 +1,8 @@
 *
-!src/*.c
-!src/*.h
+!LICENSE
+!README.md
 !Makefile.am
 !configure.ac
 !tools/
+!src/*.c
+!src/*.h
