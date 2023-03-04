@@ -1,4 +1,6 @@
-tools/
-dmenustatus
-*.o
-*.tar.zst
+*
+!src/*.c
+!src/*.h
+!Makefile.am
+!configure.ac
+!tools/

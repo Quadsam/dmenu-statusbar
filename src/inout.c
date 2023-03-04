@@ -24,10 +24,13 @@
 #include "dmenustatus.h"
 #include "utils.h"
 
-void parse_args(int argc, char **argv) {
+/* Parse arguments passed. */
+void parse_args(int argc, char **argv)
+{
     int c;
-    while ((c = getopt(argc, argv, "vt")) != -1) {
-        switch (c) {
+    while ((c = getopt(argc, argv, "vt")) != -1)
+        switch (c)
+        {
             case 'v':
                 verbose++;
                 break;
@@ -35,11 +38,11 @@ void parse_args(int argc, char **argv) {
                 testing = 1;
                 break;
         }
-    }
-    return;
 }
 
-int writelog(int v, char *fmt, ...) {
+/* Write a message to stdout */
+int writelog(int v, char *fmt, ...)
+{
 	int n = 0;
 	size_t size = 0;
 	char *p = NULL;
@@ -61,6 +64,7 @@ int writelog(int v, char *fmt, ...) {
 
 	size = (size_t) n + 1;
 	p = malloc(size);
+
 	if (p == NULL)
 		return 0;
 
@@ -68,7 +72,8 @@ int writelog(int v, char *fmt, ...) {
 	n = vsnprintf(p, size, fmt, ap);
 	va_end(ap);
 
-	if (n < 0) {
+	if (n < 0)
+	{
 		free(p);
 		return 0;
 	}
@@ -87,17 +92,21 @@ int writelog(int v, char *fmt, ...) {
 	timep = time(NULL);
     tm = localtime(&timep);
     strftime(log_time, sizeof(log_time)-1, "%x %X", tm);
-	fprintf(stderr, "[%s]\t %s:\t %s\n", log_time, prefix, p);
+	fprintf(stderr, "\n[ %s ]\t %s:\t %s\n", log_time, prefix, p);
 	free(p);
 	return 1;
 }
 
-void handle_signal(int sig) {
+/* Used to stop the main loop when a signal is recived */
+void handle_signal(int sig)
+{
     writelog(2, "Caught signal %d", sig);
     running = 0;
 }
 
-char *readfile(char *base, char *file) {
+/* Read from a file */
+char *readfile(char *base, char *file)
+{
 	char *data = malloc(513);
 	char path[64];
 	FILE *fd;
@@ -106,13 +115,15 @@ char *readfile(char *base, char *file) {
 	snprintf(path, 64, "%s/%s", base, file);
 	writelog(4, "Opening file: '%s'", path);
 	fd = fopen(path, "r");
-	if (fd == NULL) {
+	if (fd == NULL)
+	{
 		writelog(2, "Failed to open file '%s'", path);
 		data[0] = '\0';
 		return data;
 	}
 
-	if (fgets(data, 512, fd) == NULL) {
+	if (fgets(data, 512, fd) == NULL)
+	{
 		writelog(2, "File contains no data '%s'", path);
 		data[0] = '\0';
 	}

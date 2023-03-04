@@ -25,20 +25,24 @@
 
 Display *display;
 
-int open_display(void) {
-	if (!(display = XOpenDisplay(NULL))) {
+int open_display(void)
+{
+	if (!(display = XOpenDisplay(NULL)))
+	{
 		writelog(0, "Cannot open display");
 		return 0;
 	}
 	return 1;
 }
 
-void setstatus(char *str) {
+void setstatus(char *str)
+{
     XStoreName(display, DefaultRootWindow(display), str);
     XSync(display, False);
 }
 
-char *datetime(void) {
+char *datetime(void)
+{
 	char *buff = malloc(64);
 	char ctime[16];
 	char cdate[16];
@@ -46,19 +50,22 @@ char *datetime(void) {
 	struct tm *tm;
 
 	tm = localtime(&timep);
-	if (tm == NULL) {
+	if (tm == NULL)
+	{
 		writelog(1, "localtime() returned nothing!");
 		strcpy(buff, " ERROR ");
 		return buff;
 	}
 
-	if (!strftime(ctime, sizeof(ctime)-1, "%I:%M:%S %p", tm)) {
+	if (!strftime(ctime, sizeof(ctime)-1, "%I:%M:%S %p", tm))
+	{
 		writelog(1, "strftime() returned an error when retriving time");
 		strcpy(buff, " ERROR ");
 		return buff;
 	}
 
-	if (!strftime(cdate, sizeof(cdate)-1, "%m/%d/%Y", tm)) {
+	if (!strftime(cdate, sizeof(cdate)-1, "%m/%d/%Y", tm))
+	{
 		writelog(1, "strftime returned an error when retriving date");
 		strcpy(buff, " ERROR ");
 		return buff;
@@ -67,16 +74,20 @@ char *datetime(void) {
 	return buff;
 }
 
-char *cputemp(int n) {
+char *cputemp(int n)
+{
 	char *temperature = malloc(12);
     char path[43];
     snprintf(path, 43, "/sys/devices/virtual/thermal/thermal_zone%d", n);
 
 	char *fd = readfile(path, "temp");
-	if (fd == NULL) {
+	if (fd == NULL)
+	{
 		writelog(2, "Unable to read temperature");
 		strcpy(temperature, "");
-	} else {
+	}
+	else
+	{
 		snprintf(temperature, 12, "| %02.0f°C ", atof(fd) / 1000);
 		writelog(3, "Temperature: '%02.0f°C'", atof(fd) / 1000);
 	}

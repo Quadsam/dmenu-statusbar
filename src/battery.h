@@ -20,4 +20,3 @@
 char *battery(int n);
 
 #endif
-

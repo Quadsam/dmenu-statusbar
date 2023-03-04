@@ -21,12 +21,14 @@
 #include "inout.h"
 
 /* Function for getting the current charge level (returns -1 on error). */
-int battery_level(char *path) {
+int battery_level(char *path)
+{
 	char *capacity = readfile(path, "capacity");
 	int level;
 
 	// Stop if nothing is read
-	if (capacity == NULL) {
+	if (capacity == NULL)
+	{
 		writelog(1, "Failed to read battery level");
 		free(capacity);
 		return -1;
@@ -40,7 +42,8 @@ int battery_level(char *path) {
 }
 
 /* Find the current status of the battery (returns 'E' on error). */
-char battery_status(char *base) {
+char battery_status(char *base)
+{
 	char status;
 	char *buff = readfile(base, "status");
 
@@ -72,7 +75,8 @@ char battery_status(char *base) {
 }
 
 /* Retrive battery information if avaliable. */
-char *battery(int n) {
+char *battery(int n)
+{
 	char *buff = malloc(8);
 	char path[29];
 	snprintf(path, 29, "/sys/class/power_supply/BAT%d", n);
@@ -80,7 +84,8 @@ char *battery(int n) {
 
 	// Test if the battery is present
 	char *present = readfile(path, "present");
-	if (present == NULL) {
+	if (present == NULL)
+	{
 		// A battery is only present if a '1' was read.
 		writelog(3, "No battery present");
 		free(present);
@@ -89,7 +94,8 @@ char *battery(int n) {
 	}
 	free(present);
 
-	// If any of the following fail this is what they return.
+	// Default return value if a battery is detected but the
+	// 	level or status could not be read.
 	strcpy(buff, "| ERROR");
 
 	// Get the current battery level
