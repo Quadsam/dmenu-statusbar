@@ -1,2 +1,3 @@
-SUBDIRS			= src
-dist_doc_DATA	= README
+SUBDIRS             = src
+dist_doc_DATA       = README
+dist_noinst_SCRIPTS = bootstrap.sh
