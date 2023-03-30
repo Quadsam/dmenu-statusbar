@@ -24,18 +24,29 @@
 #include "dmenustatus.h"
 #include "utils.h"
 
+int writelog(int v, char *fmt, ...);
+void parse_args(int argc, char **argv);
+void handle_signal(int sig);
+char *readfile(char *base, char *file);
+
+
 /* Parse arguments passed. */
 void parse_args(int argc, char **argv)
 {
     int c;
-    while ((c = getopt(argc, argv, "vt")) != -1)
+    while ((c = getopt(argc, argv, "vqt")) != -1)
         switch (c)
         {
+            case 'q':
+                verbose = 0;
+                break;
             case 'v':
                 verbose++;
+                writelog(5, "Loglevel set to: %d", verbose);
                 break;
             case 't':
                 testing = 1;
+                writelog(3, "Running in test mode");
                 break;
         }
 }
@@ -52,7 +63,7 @@ int writelog(int v, char *fmt, ...)
     struct tm *tm;
 	va_list ap;
 
-	if (v > verbose)
+	if ( (v != 5) && (v > verbose) )
 		return 1;
 
 	va_start(ap, fmt);
@@ -77,22 +88,32 @@ int writelog(int v, char *fmt, ...)
 		free(p);
 		return 0;
 	}
-
-	if (v == 0)
-		prefix = "FATAL";
-	else if (v == 1)
-		prefix = "ERROR";
-	else if (v == 2)
-		prefix = "WARN";
-	else if (v == 3)
-		prefix = "INFO";
-	else if (v == 4)
-		prefix = "DEBUG";
+	switch (v)
+	{
+		case 0:
+			prefix = " F:";
+			break;
+		case 1:
+			prefix = " E:";
+			break;
+		case 2:
+			prefix = " W:";
+			break;
+		case 3:
+			prefix = " I:";
+			break;
+		case 4:
+			prefix = " D:";
+			break;
+		case 5:
+			prefix = "";
+			break;
+	}
 
 	timep = time(NULL);
     tm = localtime(&timep);
     strftime(log_time, sizeof(log_time)-1, "%x %X", tm);
-	fprintf(stderr, "\n[ %s ]\t %s:\t %s\n", log_time, prefix, p);
+	fprintf(stderr, "[ %s ]%s %s\n", log_time, prefix, p);
 	free(p);
 	return 1;
 }
