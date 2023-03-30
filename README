@@ -18,7 +18,7 @@ git clone https://github.com/Quadsam/dmenu-statusbar.git
 
 - Build the package:
 ```bash
-autoreconf --install --verbose
+./bootstrap.sh
 ./configure
 make
 ```
