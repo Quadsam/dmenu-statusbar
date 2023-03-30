@@ -11,9 +11,6 @@ AC_CONFIG_AUX_DIR([build-aux])
 AC_PROG_CC
 
 # Check for libraries
-AC_PATH_XTRA
-AS_IF([test "$no_x" = "yes"], [AC_MSG_ERROR([Could not find X11])])
-
 AC_CHECK_LIB([X11],
              [main],
              [AC_SUBST([X_LIBS], ["-lX11"])
