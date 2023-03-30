@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <X11/Xlib.h>
 #include "battery.h"
+#include "config.h"
 #include "inout.h"
 #include "utils.h"
 
@@ -55,8 +56,10 @@ int main(int argc, char **argv)
 	// Main loop
 	while(running)
 	{
+#ifdef HAVE_MEMSET
 		// Fill the status buffer with '\0'.
 		memset(status, 0, 42);
+#endif
 
 		// Get the current date, time, temp, and battery status.
 		datetime_buff = datetime();
@@ -87,6 +90,9 @@ int main(int argc, char **argv)
 	free(datetime_buff);
 	free(cputemp_buff);
 	free(battery_buff);
+#ifdef HAVE_MEMSET
+	memset(status, 0, 42);
+#endif
 	free(status);
 	writelog(4, "Closing display");
 	XCloseDisplay(display);
