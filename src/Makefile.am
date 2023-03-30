@@ -1,8 +1,10 @@
+# Binary program being built
 bin_PROGRAMS		= dmenustatus
-dmenustatus_SOURCES	= battery.c dmenustatus.c inout.c utils.c battery.h dmenustatus.h inout.h utils.h
-AM_CFLAGS			= -Wall -Werror -pedantic
-dmenustatus_CFLAGS	= @X_CFLAGS@
-dmenustatus_LDFLAGS	= @X_LIBS@ -lX11
 
+# Sources for building the program
+#dmenustatus_SOURCES	= battery.c dmenustatus.c inout.c utils.c battery.h dmenustatus.h inout.h utils.h
+dmenustatus_SOURCES	= battery.c dmenustatus.c inout.c utils.c
 
-# -L/usr/lib/X11 -lX11 -I/usr/include/X11
+# Compiler flags to use during build
+dmenustatus_CFLAGS	= @X_CFLAGS@ -Wall -Werror -Wformat -pedantic
+dmenustatus_LDFLAGS	= @X_PRE_LIBS@ @X_LIBS@ @X_EXTRA_LIBS@
