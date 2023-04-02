@@ -10,16 +10,20 @@ AC_CONFIG_AUX_DIR([build-aux])
 # Check for programs
 AC_PROG_CC
 
-# Check for libraries
-AC_MSG_CHECKING([for Xlib])
-AC_LINK_IFELSE([AC_LANG_CALL([], [main])],
-               [AC_SUBST([X_LIBS], ["-lX11"])
-                AC_DEFINE([HAVE_LIBX11], [1], [Define to enable the x11 library])
-                AC_MSG_RESULT([yes])],
-               [AC_MSG_FAILURE([Unable to find the x11 library on your system.])],
-               [-lX11])
-
 # Check for headers
+AC_MSG_CHECKING([for X11 headers])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <X11/Xlib.h>])],
+                  [AC_DEFINE([HAVE_X11_H], [1], [Define if X11 headers are avaliable])
+                   AC_MSG_RESULT([yes])],
+                  [AC_MSG_FAILURE([no])])
+
+# Check for libraries
+AC_MSG_CHECKING([for X11 library])
+AC_LINK_IFELSE([AC_LANG_PROGRAM([char XOpenDisplay();], [XOpenDisplay])],
+               [AC_SUBST([X_LIBS], ["-lX11"])
+                AC_DEFINE([HAVE_XLIB], [1], [Define if the X11 library is avaliable])
+                AC_MSG_RESULT([yes])],
+               [AC_MSG_FAILURE([no])])
 
 # Check for types
 AC_TYPE_SIZE_T
