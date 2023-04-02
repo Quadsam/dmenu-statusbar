@@ -21,6 +21,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <X11/Xlib.h>
+#include "config.h"
 #include "dmenustatus.h"
 #include "utils.h"
 
@@ -34,9 +35,12 @@ char *readfile(char *base, char *file);
 void parse_args(int argc, char **argv)
 {
     int c;
-    while ((c = getopt(argc, argv, "vqt")) != -1)
+    while ((c = getopt(argc, argv, "Vvqt")) != -1)
         switch (c)
         {
+            case 'V':
+                printf("%s <%s>\n", PACKAGE_STRING, PACKAGE_BUGREPORT);
+                exit(EXIT_SUCCESS);                
             case 'q':
                 verbose = 0;
                 break;
