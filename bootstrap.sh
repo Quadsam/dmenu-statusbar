@@ -1,59 +1,57 @@
 #!/usr/bin/env bash
-cd "$(dirname "$0")"||exit 1
+if [[ $DEBUG == true ]];then
+PS4='+${BASH_SOURCE}:${LINENO}:${FUNCNAME[0]:+${FUNCNAME[0]}():} '
+set -x
+fi
 configure=1
+cd "$(dirname "$0")"||exit 1
 while [[ $# -gt 0 ]];do
 case "$1" in
--s|--skip-configure)((configure--));;
+-s)((configure--));;
 *)configure_args+=("$1")
 esac
 shift
 done
 function writestr {
-local color endchr message nocolor runmessage
+local color endchr inputcolor message nocolor runmessage
 endchr='\n'
-nocolor="$(tput sgr0)"
+nocolor="\e[0m"
 runmessage=0
 while [[ $# -ne 0 ]];do
 case "$1" in
--c)case "$2" in
-black)color="$(tput setaf 0)";;
-grey)color="$(tput bold)$(tput setaf 0)";;
-red)color="$(tput setaf 1)";;
-brightred)color="$(tput bold)$(tput setaf 1)";;
-green)color="$(tput setaf 2)";;
-brightgreen)color="$(tput bold)$(tput setaf 2)";;
-yellow)color="$(tput setaf 3)";;
-brightyellow)color="$(tput bold)$(tput setaf 3)";;
-blue)color="$(tput setaf 4)";;
-brightblue)color="$(tput bold)$(tput setaf 4)";;
-magenta)color="$(tput setaf 5)";;
-brightmagenta)color="$(tput bold)$(tput setaf 5)";;
-cyan)color="$(tput setaf 6)";;
-brightcyan)color="$(tput bold)$(tput setaf 6)";;
-white)color="$(tput setaf 7)";;
-brightwhite)color="$(tput bold)$(tput setaf 7)"
+-c)\
+inputcolor="${2/grey/brightblack}"
+[[ ${inputcolor#bright} ]]&&color='\e[1m'
+case "${inputcolor#bright}" in
+black)color+='\e[30m';;
+red)color+='\e[31m';;
+green)color+='\e[32m';;
+yellow)color+='\e[33m';;
+blue)color+='\e[34m';;
+magenta)color+='\e[35m';;
+cyan)color+='\e[36m';;
+white)color+='\e[37m';;
+*)color='\e[01m\e[31m'
 esac
-shift 2
-;;
--e)((runmessage++))
 shift
 ;;
--n)\
-endchr=''
-shift
-;;
-*)\
-message+="$1"
-shift
+-e)runmessage=1;;
+-n)endchr='';;
+*)message+="$1"
 esac
+shift
 done
 printf "$color$message$nocolor$endchr"
-((runmessage))&&eval "$message"
+if [[ $runmessage -ne 0 ]];then
+eval "$message"
+fi
 }
+set -e
+{ {
 writestr -n -c brightyellow 'Running: '
-writestr -e -c brightwhite 'autoreconf --force --install --verbose'||exit 1
-((configure))&&{
+writestr -e -c brightwhite 'autoreconf --force --install --verbose'
+}&&[[ $configure -ne 0 ]]&&{
 printf '\n'
 writestr -n -c brightyellow 'Running: '
-writestr -e -c brightwhite "./configure ${configure_args[*]}"||exit 1
-}
+writestr -e -c brightwhite "./configure ${configure_args[*]}"
+};}
