@@ -1,42 +1,48 @@
 # dmenustatus
 
-*A statusbar for dmenu*
+A statusbar for dmenu
 
-**This package is still in early alpha and may not work on your system, if you**
-**have any issues feel free to make an issue and I will try to help to the best**
-**of my abilities. (Pull requests are very welcome)**
-
+**This package is still in early alpha and may not work on your system,
+if you have any issues feel free to make an issue and I will try to help
+to the best of my abilities. (Pull requests are welcome)**
 
 ## Building
 
 - Clone the source repo:
 
-```bash
+``` bash
 git clone https://github.com/Quadsam/dmenu-statusbar.git
 ```
 
-
 - Build the package:
-```bash
-./bootstrap.sh
-./configure
-make
-```
 
+  - With the `bootstrap.sh` script provided:
+
+  ``` bash
+  ./bootstrap.sh
+  make
+  ```
+
+  **Note:* pass `-s` to skip the `configure` step or pass any arguments
+  you want to run `./configure` with to this script*
+
+  - Or the regular way:
+
+  ``` bash
+  autoreconf --force --install --verbose
+  ./configure
+  make
+  ```
 
 - Install the package:
 
-You can change the PREFIX and DESTDIR variables to customise the installation.
-
-*PREFIX defaults to `/usr/local`*
-
-```bash
+``` bash
 make install
 ```
 
-
 ## License
-```
+
+``` license
 dmenustatus - a statusbar for dwm's dmenu
 Copyright (C) 2023  Quadsam
 
