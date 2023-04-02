@@ -1,4 +1,4 @@
-// dmenu-statusbar - a statusbar for dwm's dmenu
+// dmenustatus - a statusbar for dwm's dmenu
 // Copyright (C) 2023  Quadsam
 //
 // This program is free software: you can redistribute it and/or modify

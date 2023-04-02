@@ -2,7 +2,7 @@
 AC_PREREQ([2.71])
 
 # Information about the package
-AC_INIT([dmenu-statusbar],[0.5.4-alpha],[bugs@quadsam.com])
+AC_INIT([dmenustatus],[0.5.4-alpha],[bugs@quadsam.com])
 AC_CONFIG_SRCDIR([src/dmenustatus.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
