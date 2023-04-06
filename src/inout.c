@@ -34,25 +34,28 @@ char *readfile(char *base, char *file);
 /* Parse arguments passed. */
 void parse_args(int argc, char **argv)
 {
-    int c;
-    while ((c = getopt(argc, argv, "Vvqt")) != -1)
-        switch (c)
-        {
-            case 'V':
-                printf("%s <%s>\n", PACKAGE_STRING, PACKAGE_BUGREPORT);
-                exit(EXIT_SUCCESS);                
-            case 'q':
-                verbose = 0;
-                break;
-            case 'v':
-                verbose++;
-                writelog(5, "Loglevel set to: %d", verbose);
-                break;
-            case 't':
-                testing = 1;
-                writelog(3, "Running in test mode");
-                break;
-        }
+	int c;
+	while ((c = getopt(argc, argv, "Vvqt:")) != -1)
+		switch (c)
+		{
+			case 'V':
+				printf("%s <%s>\n", PACKAGE_STRING, PACKAGE_BUGREPORT);
+				exit(EXIT_SUCCESS);                
+			case 'q':
+				verbose = 0;
+				break;
+			case 'v':
+				verbose++;
+				writelog(5, "Loglevel set to: %d", verbose);
+				break;
+			case 't':
+				testtimes = atoi(optarg);
+				if (testtimes == 0)
+					testtimes++;
+				testing = 1;
+				writelog(3, "Running in test mode");
+				break;
+	}
 }
 
 /* Write a message to stdout */

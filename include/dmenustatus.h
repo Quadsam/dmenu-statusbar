@@ -20,6 +20,7 @@
 extern int running;
 extern int verbose;
 extern int testing;
+extern int testtimes;
 
 #endif
 

@@ -28,9 +28,11 @@
 int verbose = 5;
 int running = 1;
 int testing = 0;
+int testtimes = 0;
 
 int main(int argc, char **argv)
 {
+	int step = 1;
 	// Parse any arguments passed.
 	parse_args(argc, argv);
 
@@ -68,8 +70,11 @@ int main(int argc, char **argv)
 
 		// Write the data recived into the status buffer.
 		strcpy(status, datetime_buff);
+		free(datetime_buff);
 		strcat(status, cputemp_buff);
+		free(cputemp_buff);
 		strcat(status, battery_buff);
+		free(battery_buff);
 
 		// Log what we are doing.
 		writelog(4, "Setting status: '%s'", status);
@@ -77,19 +82,25 @@ int main(int argc, char **argv)
 		// Set the status.
 		setstatus(status);
 
+
 		// End the loop if we are only in testing mode.
-		if (testing)
+		if (testing && step == testtimes)
+		{
 			running = 0;
-		else
-			sleep(1);
+			break;
+		}
+		else if (testing)
+			step++;
+
+		sleep(1);
 	}
 
 	// Cleanup the buffers and close the display.
 	writelog(4, "Cleaning up...");
 	writelog(4, "Freeing buffers");
-	free(datetime_buff);
-	free(cputemp_buff);
-	free(battery_buff);
+//	free(datetime_buff);
+//	free(cputemp_buff);
+//	free(battery_buff);
 #ifdef HAVE_MEMSET
 	memset(status, 0, 42);
 #endif
