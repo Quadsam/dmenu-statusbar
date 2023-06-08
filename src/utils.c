@@ -54,21 +54,21 @@ char *datetime(void)
 	{
 		writelog(1, "localtime() returned nothing!");
 		strcpy(buff, " ERROR ");
-		return buff;
+		return NULL;
 	}
 
 	if (!strftime(ctime, sizeof(ctime)-1, "%I:%M:%S %p", tm))
 	{
 		writelog(1, "strftime() returned an error when retriving time");
 		strcpy(buff, " ERROR ");
-		return buff;
+		return NULL;
 	}
 
 	if (!strftime(cdate, sizeof(cdate)-1, "%m/%d/%Y", tm))
 	{
 		writelog(1, "strftime returned an error when retriving date");
 		strcpy(buff, " ERROR ");
-		return buff;
+		return NULL;
 	}
 	snprintf(buff, 64, " %s | %s ", ctime, cdate);
 	return buff;
