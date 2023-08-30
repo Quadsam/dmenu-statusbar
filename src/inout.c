@@ -35,7 +35,7 @@ char *readfile(char *base, char *file);
 void parse_args(int argc, char **argv)
 {
 	int c;
-	while ((c = getopt(argc, argv, "hHqt:vV")) != -1)
+	while ((c = getopt(argc, argv, ":hHqt:vV")) != -1)
 		switch (c)
 		{
 			case 'h':
@@ -64,6 +64,12 @@ void parse_args(int argc, char **argv)
 				testing = 1;
 				writelog(3, "Running in test mode");
 				break;
+			case '?':
+				writelog(0, "Illegal option -- '-%c'", optopt);
+				exit(EXIT_FAILURE);
+			case ':':
+				writelog(0, "Missing argument for -- '-%c'", optopt);
+				exit(EXIT_FAILURE);
 	}
 }
 
