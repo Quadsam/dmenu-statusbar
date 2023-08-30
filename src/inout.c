@@ -35,9 +35,18 @@ char *readfile(char *base, char *file);
 void parse_args(int argc, char **argv)
 {
 	int c;
-	while ((c = getopt(argc, argv, "Vvqt:")) != -1)
+	while ((c = getopt(argc, argv, "hHqt:vV")) != -1)
 		switch (c)
 		{
+			case 'h':
+			case 'H':
+				printf("Usage: dmenustatus [OPTION]\n\n");
+				printf("Options:\n");
+				printf("  -q,      Set verbosity to zero (no output).\n");
+				printf("  -t <n>,  Run the main program loop 'n' times.\n");
+				printf("  -v,      Increase verbosity by one (use multiple times to increase verbosity).\n");
+				printf("  -V,      Display current version.\n");
+				exit(EXIT_SUCCESS);
 			case 'V':
 				printf("%s <%s>\n", PACKAGE_STRING, PACKAGE_BUGREPORT);
 				exit(EXIT_SUCCESS);                
