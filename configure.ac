@@ -6,7 +6,8 @@ AC_INIT([dmenustatus],[0.5.5-alpha],[bugs@quadsam.com])
 AC_CONFIG_SRCDIR([src/dmenustatus.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
-AM_MAINTAINER_MODE([enable])
+AM_MAINTAINER_MODE([disable])
+AM_SILENT_RULES([yes])
 
 # Check for programs
 AC_PROG_CC
