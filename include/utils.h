@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef UTILS_H_
-#define UTILS_H_
+#ifndef _UTILS_H
+#define _UTILS_H
 
 extern Display *display;
 
@@ -24,5 +24,4 @@ void setstatus(char *str);
 char *datetime(void);
 char *cputemp(int n);
 
-#endif
-
+#endif /* _UTILS_H */
