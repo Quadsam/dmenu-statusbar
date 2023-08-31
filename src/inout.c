@@ -35,9 +35,12 @@ char *readfile(char *base, char *file);
 void parse_args(int argc, char **argv)
 {
 	int c;
-	while ((c = getopt(argc, argv, ":hHqt:vV")) != -1)
+	while ((c = getopt(argc, argv, ":fhHqt:vV")) != -1)
 		switch (c)
 		{
+			case 'f':
+				forked = 1;
+				break;
 			case 'h':
 			case 'H':
 				printf("Usage: dmenustatus [OPTION]\n\n");
@@ -85,7 +88,7 @@ int writelog(int v, char *fmt, ...)
     struct tm *tm;
 	va_list ap;
 
-	if ( (v != 5) && (v > verbose) )
+	if ((v != 5) && (v > verbose))
 		return 1;
 
 	va_start(ap, fmt);

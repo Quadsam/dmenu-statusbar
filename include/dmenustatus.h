@@ -21,5 +21,6 @@ extern int running;
 extern int verbose;
 extern int testing;
 extern int testtimes;
+extern int forked;
 
 #endif /* _DMENUSTATUS_H */

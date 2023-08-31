@@ -29,6 +29,7 @@ int verbose = 3;
 int running = 1;
 int testing = 0;
 int testtimes = 0;
+int forked = 0;
 
 int main(int argc, char **argv)
 {
@@ -36,6 +37,19 @@ int main(int argc, char **argv)
 
 	// Parse any arguments passed.
 	parse_args(argc, argv);
+
+	if(!forked)
+	{
+		char *arg[argc + 2];
+		arg[0] = argv[0];
+		arg[1] = "-f";
+		for(int i = 1; i != argc; i++)
+			arg[i + 1] = argv[i];
+
+		arg[argc + 1] = NULL;
+		spawn(argv[0], arg);
+		exit(EXIT_SUCCESS);
+	}
 
 	// Try to make a connection to the X server.
 	if (!open_display())

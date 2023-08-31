@@ -23,5 +23,6 @@ int open_display(void);
 void setstatus(char *str);
 char *datetime(void);
 char *cputemp(int n);
+void spawn(const char *cmd, char *const argv[]);
 
 #endif /* _UTILS_H */
