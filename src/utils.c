@@ -15,6 +15,8 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <time.h>
+#include <signal.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -93,4 +95,22 @@ char *cputemp(int n)
 	}
 	free(fd);
 	return temperature;
+}
+
+void spawn(const char *cmd, char *const argv[])
+{
+	struct sigaction sa;
+
+	if (fork() == 0)
+	{
+		setsid();
+
+		sigemptyset(&sa.sa_mask);
+		sa.sa_flags = 0;
+		sa.sa_handler = SIG_DFL;
+		sigaction(SIGCHLD, &sa, NULL);
+
+		execvp(cmd, argv);
+		perror("Execvp");
+	}
 }

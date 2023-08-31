@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef DMENU_STATUS_H_
-#define DMENU_STATUS_H_
+#ifndef _DMENUSTATUS_H
+#define _DMENUSTATUS_H
 
 extern int running;
 extern int verbose;
 extern int testing;
 extern int testtimes;
+extern int forked;
 
-#endif
-
+#endif /* _DMENUSTATUS_H */

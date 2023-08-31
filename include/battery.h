@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef BATTERY_H_
-#define BATTERY_H_
+#ifndef _BATTERY_H
+#define _BATTERY_H
 
 char *battery(int n);
 
-#endif
+#endif /* _BATTERY_H */

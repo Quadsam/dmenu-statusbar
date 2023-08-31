@@ -14,13 +14,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef INOUT_H_
-#define INOUT_H_
+#ifndef _INOUT_H
+#define _INOUT_H
 
 void parse_args(int argc, char **argv);
 int writelog(int v, char *fmt, ...);
 void handle_signal(int sig);
 char *readfile(char *base, char *file);
 
-#endif
-
+#endif /* _INOUT_H */

@@ -35,9 +35,12 @@ char *readfile(char *base, char *file);
 void parse_args(int argc, char **argv)
 {
 	int c;
-	while ((c = getopt(argc, argv, "hHqt:vV")) != -1)
+	while ((c = getopt(argc, argv, ":fhHqt:vV")) != -1)
 		switch (c)
 		{
+			case 'f':
+				forked = 1;
+				break;
 			case 'h':
 			case 'H':
 				printf("Usage: dmenustatus [OPTION]\n\n");
@@ -64,6 +67,12 @@ void parse_args(int argc, char **argv)
 				testing = 1;
 				writelog(3, "Running in test mode");
 				break;
+			case '?':
+				writelog(0, "Illegal option -- '-%c'", optopt);
+				exit(EXIT_FAILURE);
+			case ':':
+				writelog(0, "Missing argument for -- '-%c'", optopt);
+				exit(EXIT_FAILURE);
 	}
 }
 
@@ -79,7 +88,7 @@ int writelog(int v, char *fmt, ...)
     struct tm *tm;
 	va_list ap;
 
-	if ( (v != 5) && (v > verbose) )
+	if ((v != 5) && (v > verbose))
 		return 1;
 
 	va_start(ap, fmt);
