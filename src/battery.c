@@ -47,11 +47,6 @@ char battery_status(char *base)
 	char status;
 	char *buff = readfile(base, "status");
 
-	if (buff == NULL) {
-		writelog(1, "Failed to read battery status");
-		return 'E';
-	}
-
 	if (!strncmp(buff, "Discharging", 11)) {
 		writelog(3, "Battery status: 'Discharging'");
 		status = 'v';
