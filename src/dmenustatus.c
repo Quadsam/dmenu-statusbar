@@ -56,7 +56,8 @@ int main(int argc, char **argv)
 		return 1;
 
 	// Once a connection has been made, allocate our buffers.
-	char *status = malloc(42);
+	const int status_sz = 512;
+	char *status = malloc(status_sz);
 	char *datetime_buff = NULL;
 	char *cputemp_buff = NULL;
 	char *battery_buff = NULL;
@@ -74,7 +75,7 @@ int main(int argc, char **argv)
 	while(running)
 	{
 		// Fill the status buffer with '\0'.
-		memset(status, 0, 42);
+		memset(status, 0, status_sz);
 
 		// Get the current date, time, temp, and battery status.
 		datetime_buff = datetime();
@@ -110,7 +111,7 @@ int main(int argc, char **argv)
 	// Cleanup the buffers and close the display.
 	writelog(4, "Cleaning up...");
 	writelog(4, "Freeing buffers");
-	memset(status, 0, 42);
+	memset(status, 0, status_sz);
 	free(status);
 	writelog(4, "Closing display");
 	XCloseDisplay(display);
